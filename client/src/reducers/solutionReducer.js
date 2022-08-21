@@ -1,9 +1,5 @@
 const INITIAL_STATE = {
-    solution: {
-        word: "refer",
-        lowercase: "refer",
-        uppercase: "REFER"
-    }
+    solution: {}
 }
 
 function solutionReducer(state = INITIAL_STATE, action) {

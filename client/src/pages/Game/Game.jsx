@@ -5,6 +5,7 @@ import {
     GameGrid,
     PlayerStatusModal
 } from "../../components";
+import axios from "axios";
 
 class Game extends React.PureComponent {
     constructor(props) {
@@ -19,7 +20,7 @@ class Game extends React.PureComponent {
     }
 
     componentDidMount() {
-        window.addEventListener("keyup", this.handlePlayerInput)
+        window.addEventListener("keydown", this.handlePlayerInput)
     }
 
     handlePlayerInput(event) {
@@ -30,6 +31,8 @@ class Game extends React.PureComponent {
 
         const type = new Audio("/assets/sfx/type.mp3")
         const success = new Audio("/assets/sfx/submit.mp3")
+        const error = new Audio("/assets/sfx/error.mp3")
+        const undo = new Audio("/assets/sfx/delete.mp3")
 
         if (playerGuessIsValid && this.props.currentGuess.length < 5) {
             this.props.makeLetterGuess(playerAction.toLowerCase());
@@ -37,26 +40,97 @@ class Game extends React.PureComponent {
         }
         
         else if (playerAction === "Backspace") {
-            this.props.undoLetterGuess();
+            if (this.props.currentGuess.length > 0) {
+                undo.play()
+                this.props.undoLetterGuess();
+            }
         }
         
         else if (playerAction === "Enter") {
-            success.play()
+            if (this.props.currentGuess.length === 5) {
+                axios({
+                    method: "GET",
+                    url: `/api/word/${ this.props.currentGuess }`
+                }).then(response => {
+                    if (response.data.success) {
+                        success.play()
+                        this.acceptPlayerGuess(this.props.currentGuess);
 
-            if (this.props.currentGuess === this.props.solution.word) {                
-                window.removeEventListener("keyup", this.handlePlayerInput)
-                setTimeout(() => {
-                    this.setState({ playerStatusModalIsVisible: true, playerStatus: "win" })
-                }, 1500)
+                        if (this.props.currentGuess === this.props.solution.word) {
+                            
+                            window.removeEventListener("keydown", this.handlePlayerInput)
+                            
+                            setTimeout(() => {
+                                this.setState({ playerStatusModalIsVisible: true, playerStatus: "win" })
+                            }, 1500)
+                        }
+
+                        else if (this.props.guessHistory.length + 1 === 7) {
+                            setTimeout(() => {
+                                this.setState({ playerStatusModalIsVisible: true, playerStatus: "defeat" })
+                            }, 1500)
+                        }
+                    } else {
+                        error.play()
+                    }
+                })
             }
+            // if (this.props.currentGuess === this.props.solution.word) {    
+            //     if (this.props.currentGuess.length === 5) {
+            //         axios({
+            //             method: "GET",
+            //             url: `/api/word/${ this.props.currentGuess }`
+            //         }).then(response => {
+            //             if (response.data.success) {
+            //             } else {
+            //                 error.play()
+            //             }
+    
+            //             setTimeout(() => {
+            //                 this.setState({ playerStatusModalIsVisible: true, playerStatus: "defeat" })
+            //             }, 1500)
+            //         })
+            //         this.acceptPlayerGuess(this.props.currentGuess);
+            //     }            
+            //     this.acceptPlayerGuess(this.props.currentGuess);
+            //     window.removeEventListener("keyup", this.handlePlayerInput)
+            //     setTimeout(() => {
+            //         this.setState({ playerStatusModalIsVisible: true, playerStatus: "win" })
+            //     }, 1500)
+            // }
             
-            else if (this.props.guessHistory.length + 1 === 7) {
-                setTimeout(() => {
-                    this.setState({ playerStatusModalIsVisible: true, playerStatus: "defeat" })
-                }, 1500)
-            }
+            // else if (this.props.guessHistory.length + 1 === 7) {
+            //     axios({
+            //         method: "GET",
+            //         url: `/api/word/${ this.props.currentGuess }`
+            //     }).then(response => {
+            //         if (response.data.success) {
+            //             success.play()
+            //             this.acceptPlayerGuess(response.data.word);
+            //         } else {
+            //             error.play()
+            //         }
 
-            this.acceptPlayerGuess(this.props.currentGuess);
+            //         setTimeout(() => {
+            //             this.setState({ playerStatusModalIsVisible: true, playerStatus: "defeat" })
+            //         }, 1500)
+            //     })
+            //     this.acceptPlayerGuess(this.props.currentGuess);
+            // }
+
+            //  else if (!this.props.guessHistory.includes(this.props.currentGuess)) {
+            //     axios({
+            //         method: "GET",
+            //         url: `/api/word/${ this.props.currentGuess }`
+            //     }).then(response => {
+            //         if (response.data.success) {
+            //             success.play()
+            //             this.acceptPlayerGuess(response.data.word);
+            //         } else {
+            //             error.play()
+            //         }
+            //     })
+            //  }
 
         }
 
@@ -116,7 +190,8 @@ function mapDispatchToProps(dispatch) {
         makeLetterGuess: (letter) =>  dispatch({ type: "guessed/letter", payload: letter }),
         undoLetterGuess: () => dispatch({ type: "undo/letter" }),
         makeWordGuess: (word) => dispatch({ type: "guessed/word", payload: word }),
-        resetCurrentGuess: () => dispatch({ type: "RESET/GUESS_WORD" })
+        resetCurrentGuess: () => dispatch({ type: "RESET/GUESS_WORD" }),
+        makeWrongWordGuess: (word) => dispatch({type: "guessed/incorrect@word", payload: word})
     }
 }
 

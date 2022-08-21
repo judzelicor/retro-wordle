@@ -9,15 +9,14 @@ class GameGrid extends React.PureComponent {
     }
 
     render() {
+        console.log(this.props)
         return (
             <React.Fragment key={uuidv4()}>
                 {
                     [...this.props.guessObjectsHistory, ...Array(7 - this.props.guessObjectsHistory.length)].map((word, index) => {
-                        console.log(word)
                         if (word) {
-
                             const shouldAnimate = (word.word === this.props.guessHistory[this.props.guessHistory.length - 1]) ? true : false;
-
+                            
                             return (
                                 <div className={`worditudeWordDisplayRow__94rB ${shouldAnimate ? "animate" : "history"}`} key={uuidv4()}>
                                     <GridRow key={uuidv4()} word={ word.displayArray } />
@@ -26,7 +25,7 @@ class GameGrid extends React.PureComponent {
                         } else {
 
                             return (
-                                <div className="worditudeWordDisplayRow__94rB" key={uuidv4()}>
+                                <div className={`worditudeWordDisplayRow__94rB`} key={uuidv4()}>
                                     <GridRow round={index} key={uuidv4()} />
                                 </div>
                             )
@@ -39,11 +38,11 @@ class GameGrid extends React.PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { guessObjectsHistory, currentGuess, guessRound, guessHistory } = state.guessReducer;
+    const { guessObjectsHistory, currentGuess, wrongGuesses, guessHistory } = state.guessReducer;
     return {
         guessHistory,
         guessObjectsHistory,
-        guessRound,
+        wrongGuesses
     }
 }
 

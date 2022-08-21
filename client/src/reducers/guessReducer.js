@@ -2,7 +2,7 @@ const INITIAL_STATE = {
     guessHistory: [],
     currentGuess: "",
     guessObjectsHistory: [],
-    guessRound: 1
+    wrongGuesses: []
 }
 
 function guessReducer(state = INITIAL_STATE, action) {
@@ -31,6 +31,12 @@ function guessReducer(state = INITIAL_STATE, action) {
             return {
                 ...state,
                 currentGuess: ""
+            }
+
+        case "guessed/incorrect@word":
+            return {
+                ...state,
+                wrongGuesses: [...state.wrongGuesses, action.payload]
             }
 
         default:

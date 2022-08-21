@@ -86,12 +86,13 @@ class GridRow extends React.PureComponent {
 }
 
 function mapStateToProps(state) {
-    const { guessHistory, currentGuess, guessObjectsHistory } = state.guessReducer;
+    const { guessHistory, currentGuess, guessObjectsHistory, wrongGuesses } = state.guessReducer;
 
     return {
         guessHistory,
         currentGuess,
-        guessObjectsHistory
+        guessObjectsHistory,
+        wrongGuesses
     }
 }
 export default connect(mapStateToProps)(GridRow);
