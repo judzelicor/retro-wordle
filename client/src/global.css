@@ -1,0 +1,53 @@
+@font-face {
+    font-family: "Broken Console";
+    src: url("./assets/fonts/Broken\ Console\ Bold.ttf") format("truetype");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Broken Console";
+    src: url("./assets/fonts/Broken\ Console\ Regular.ttf") format("truetype");
+    font-weight: normal;
+}
+
+body, 
+html {
+    background-color: #ADBA89;
+    font-family: 
+        "Broken Console", 
+        system-ui, 
+        -apple-system, 
+        BlinkMacSystemFont, 
+        'Segoe UI', 
+        Roboto, 
+        Oxygen, 
+        Ubuntu, 
+        Cantarell, 
+        'Open Sans', 
+        'Helvetica Neue', 
+        sans-serif;
+}
+
+.worditudeWordDisplay__94rB {
+    display: grid;
+    grid-gap: 9px;
+    max-width: 361px;
+    height: 491px;
+    width: 100%;
+}
+
+.worditudeWordDisplayRow__94rB {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 9px;
+}
+
+.appViewport {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    grid-template-rows: min-content;
+    height: 100vh;
+    width: 100vw;
+}
