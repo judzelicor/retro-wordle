@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Word } from "../../objects";
 import {
     GameGrid,
+    Keyboard,
     PlayerStatusModal
 } from "../../components";
 import axios from "axios";
@@ -23,6 +24,19 @@ class Game extends React.PureComponent {
         window.addEventListener("keydown", this.handlePlayerInput)
     }
 
+    componentDidUpdate() {
+        const successSFX = new Audio("/assets/sfx/success.mp3")
+        
+        if (this.props.guessHistory[this.props.guessHistory.length - 1] === this.props.solution.uppercase) {
+            
+            this.acceptPlayerGuess(this.props.currentGuess);
+            
+            setTimeout(() => {
+                this.setState({ playerStatusModalIsVisible: true, playerStatus: "win" })
+            }, 2300)
+        }
+    }
+
     handlePlayerInput(event) {
 
         const playerAction = event.key;
@@ -34,7 +48,7 @@ class Game extends React.PureComponent {
         const error = new Audio("/assets/sfx/error.mp3")
         const undo = new Audio("/assets/sfx/delete.mp3")
 
-        if (playerGuessIsValid && this.props.currentGuess.length < 5) {
+        if (playerGuessIsValid && this.props.currentGuess.length < 5 && !event.metaKey) {
             this.props.makeLetterGuess(playerAction.toLowerCase());
             type.play()
         }
@@ -47,93 +61,47 @@ class Game extends React.PureComponent {
         }
         
         else if (playerAction === "Enter") {
+            
             if (this.props.currentGuess.length === 5) {
                 axios({
                     method: "GET",
                     url: `/api/word/${ this.props.currentGuess }`
                 }).then(response => {
+                    window.removeEventListener("keydown", this.handlePlayerInput)
+
+                    const add = setTimeout(() => {
+                        window.addEventListener("keydown", this.handlePlayerInput)
+
+                    }, 1500)
+
                     if (response.data.success) {
-                        success.play()
-                        this.acceptPlayerGuess(this.props.currentGuess);
-
-                        if (this.props.currentGuess === this.props.solution.word) {
-                            
-                            window.removeEventListener("keydown", this.handlePlayerInput)
-                            
-                            setTimeout(() => {
-                                this.setState({ playerStatusModalIsVisible: true, playerStatus: "win" })
-                            }, 1500)
-                        }
-
-                        else if (this.props.guessHistory.length + 1 === 7) {
+                        if (this.props.guessHistory.length + 1 === 7 && !this.props.guessHistory.includes(this.props.currentGuess.toUpperCase())) {
+                            this.acceptPlayerGuess(this.props.currentGuess);
+                            success.play()
                             setTimeout(() => {
                                 this.setState({ playerStatusModalIsVisible: true, playerStatus: "defeat" })
-                            }, 1500)
+                            }, 2300)
+                        } else if (this.props.guessHistory.includes(this.props.currentGuess.toUpperCase())) {
+                            clearTimeout(add)
+                            window.addEventListener("keydown", this.handlePlayerInput)
+
+                            error.play()
+                            this.props.toggleIncompleteWordInputAlert(true)
+                        } else {
+                            this.acceptPlayerGuess(this.props.currentGuess);
+                            success.play()
                         }
                     } else {
                         error.play()
+                        this.props.toggleIncompleteWordInputAlert(true)
+                        clearTimeout(add)
+                        window.addEventListener("keydown", this.handlePlayerInput)
                     }
                 })
             } else {
                 error.play()
                 this.props.toggleIncompleteWordInputAlert(true)
             }
-            // if (this.props.currentGuess === this.props.solution.word) {    
-            //     if (this.props.currentGuess.length === 5) {
-            //         axios({
-            //             method: "GET",
-            //             url: `/api/word/${ this.props.currentGuess }`
-            //         }).then(response => {
-            //             if (response.data.success) {
-            //             } else {
-            //                 error.play()
-            //             }
-    
-            //             setTimeout(() => {
-            //                 this.setState({ playerStatusModalIsVisible: true, playerStatus: "defeat" })
-            //             }, 1500)
-            //         })
-            //         this.acceptPlayerGuess(this.props.currentGuess);
-            //     }            
-            //     this.acceptPlayerGuess(this.props.currentGuess);
-            //     window.removeEventListener("keyup", this.handlePlayerInput)
-            //     setTimeout(() => {
-            //         this.setState({ playerStatusModalIsVisible: true, playerStatus: "win" })
-            //     }, 1500)
-            // }
-            
-            // else if (this.props.guessHistory.length + 1 === 7) {
-            //     axios({
-            //         method: "GET",
-            //         url: `/api/word/${ this.props.currentGuess }`
-            //     }).then(response => {
-            //         if (response.data.success) {
-            //             success.play()
-            //             this.acceptPlayerGuess(response.data.word);
-            //         } else {
-            //             error.play()
-            //         }
-
-            //         setTimeout(() => {
-            //             this.setState({ playerStatusModalIsVisible: true, playerStatus: "defeat" })
-            //         }, 1500)
-            //     })
-            //     this.acceptPlayerGuess(this.props.currentGuess);
-            // }
-
-            //  else if (!this.props.guessHistory.includes(this.props.currentGuess)) {
-            //     axios({
-            //         method: "GET",
-            //         url: `/api/word/${ this.props.currentGuess }`
-            //     }).then(response => {
-            //         if (response.data.success) {
-            //             success.play()
-            //             this.acceptPlayerGuess(response.data.word);
-            //         } else {
-            //             error.play()
-            //         }
-            //     })
-            //  }
 
         }
 
@@ -166,9 +134,14 @@ class Game extends React.PureComponent {
         console.log(this.props)
         return (
             <main className="appViewport">
-                <h1>WORDITUDE</h1>
-                <div className="worditudeWordDisplay__94rB">
-                    <GameGrid />
+                <div className="grid">
+                    <div className="flex items-center justify-center flex-col">
+                        <h1>WORDITUDE</h1>
+                        <div className="worditudeWordDisplay__94rB">
+                            <GameGrid />
+                        </div>
+                    </div>
+                    <Keyboard />
                 </div>
                 { this.state.playerStatusModalIsVisible && <PlayerStatusModal word={this.props.solution.word} playerStatus={this.state.playerStatus} /> }
             </main>

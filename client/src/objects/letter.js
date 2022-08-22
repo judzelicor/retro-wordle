@@ -2,6 +2,7 @@ class Letter {
     constructor(letter, state) {
         this.character = letter
         this.state = state
+        this.hasBeenRevealed = false
     }
 }
 

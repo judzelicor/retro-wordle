@@ -7,6 +7,7 @@ class PlayerStatusModal extends React.PureComponent {
     componentDidMount() {
         const success = new Audio("assets/sfx/success.mp3")
         const defeat = new Audio("assets/sfx/defeat.mp3")
+
         if (this.props.playerStatus === "win") {
             success.play();
         } else {

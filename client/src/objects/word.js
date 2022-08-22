@@ -9,6 +9,7 @@ class Word {
         this.solutionArray = this.solution.uppercase.split("")
         this.displayArray = new Array(5)
         this.letters = this.word.split("")
+        this.hasBeenRevealed = false
     }
 
     create() {

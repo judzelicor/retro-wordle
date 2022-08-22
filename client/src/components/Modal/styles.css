@@ -11,14 +11,16 @@
     animation-duration: 700ms;
     animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
     animation-fill-mode: forwards;
+    will-change: transform;
+
 }
 
 .modalMessage {
+    background-color: #ADBA89;
     padding: 50px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: #ADBA89;
     color: #1F1F20;
     font-weight: 800;
     text-align: center;
@@ -44,12 +46,14 @@
 
 @keyframes reveal {
     0% {
-        transform: rotateX(90deg);
+        z-index: 99;
+        transform: rotate3d(1, 0, 0, 180deg);
     }
 
 
     100% {
-        transform: rotate(0deg);
+        z-index: 99;
+        transform: rotate3d(0, 0, 0, 0deg);
     }
 
 }

@@ -21,17 +21,23 @@ class GameGrid extends React.PureComponent {
                 this.setState({rowShouldShake: false})
             }, 300)
         }
+
+
     }
 
     render() {
+        console.log(this.props.guessObjectsHistory)
         return (
             <React.Fragment key={uuidv4()}>
-                {/* {
+                {
                     [...this.props.guessObjectsHistory, ...Array(7 - this.props.guessObjectsHistory.length)].map((word, index) => {
                         if (word) {
-                            const shouldAnimate = (word.word === this.props.guessHistory[this.props.guessHistory.length - 1]) ? true : false;
+                            // const shouldAnimate = (word.word === this.props.guessHistory[this.props.guessHistory.length - 1]) ? true : false;
+                            const shouldAnimate = word.hasBeenRevelead
+                            word.hasBeenRevelead = true
+                            
                             return (
-                                <div className={`worditudeWordDisplayRow__94rB ${shouldAnimate ? "animate" : "history"}`} key={uuidv4()}>
+                                <div className={`worditudeWordDisplayRow__94rB ${shouldAnimate ? "history" : "animate"}`} key={uuidv4()}>
                                     <GridRow key={uuidv4()} word={ word.displayArray } />
                                 </div>
                             )
@@ -51,16 +57,16 @@ class GameGrid extends React.PureComponent {
                             )
                         }
                     })
-                } */}
-                {
-                    // [...this.props.guessObjectsHistory].map((word, index) => {
-                    //     const shouldAnimate = (word.word === this.props.guessHistory[this.props.guessHistory.length - 1]) ? true : false;
-                    //     return (
-                    //         <div className={`worditudeWordDisplayRow__94rB ${shouldAnimate ? "animate" : "history"}`} key={uuidv4()}>
-                    //         </div>
-                    //     )
-                    // })
-                    // <GridRow key={uuidv4()} word={ word.displayArray } />
+                }
+                {/* {
+                    [...this.props.guessObjectsHistory].map((word, index) => {
+                        // const shouldAnimate = (word.word === this.props.guessHistory[this.props.guessHistory.length - 1]) ? true : false;
+                        return (
+                            <div className={`worditudeWordDisplayRow__94rB ${word.hasBeenRevealed ? "animate" : "history"}`} key={uuidv4()}>
+                                <GridRow key={uuidv4()} word={ word.displayArray } />
+                            </div>
+                        )
+                    })
                 }
                 {
                     this.currentGuess.length < 5 && <GridRow currentGuess={this.props.currentGuess} />
@@ -74,7 +80,7 @@ class GameGrid extends React.PureComponent {
                             </div>
                         )
                     })
-                }
+                } */}
             </React.Fragment>
         )
     }
@@ -87,8 +93,6 @@ function mapStateToProps(state) {
         guessHistory,
         guessObjectsHistory,
         wrongGuesses,
-        currentGuess,
-        currentGuess,
         incompleteWordInputAlertIsVisible
     }
 }

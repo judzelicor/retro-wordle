@@ -1,0 +1,41 @@
+.keyboard__KGt5 {
+    width: 100%;
+    /* background-color: #869362; */
+    background-color: #5D6744;
+    padding: 32px;
+}
+
+.keyboardRow__KGt5 {
+    display: flex;
+    height: 65px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+.keyboardKey__KGt5 {
+    margin: 0 7px;
+    width: 100%;
+    max-width: 50px;
+}
+
+.keyboardKeyButton__KGt5 {
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 55px;
+    border: 3px solid #ADBA89;
+    color: #ADBA89;
+    width: 100%;
+    background-color: transparent;
+    cursor: pointer;
+    outline: none;
+}
+
+.keyboardAction__KGt5 {
+    max-width: 65px;
+    margin: 0 7px;
+    width: 100%;
+}
