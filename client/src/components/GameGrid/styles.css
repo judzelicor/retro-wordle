@@ -85,6 +85,13 @@
     animation-delay: 800ms;
 }
 
+.worditudeWordDisplayRow__94rB.shake {
+    animation-name: shake;
+    animation-duration: 200ms;
+    animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+    animation-iteration-count: 2;
+}
+
 @keyframes revealCorrect {
     0% {
         color: #ADBA89;
@@ -180,4 +187,16 @@
         transform: scale(1);
     }
 
+}
+
+@keyframes shake {
+    0% {
+        transform: translate(3px, 0);
+    }
+    50% {
+        transform: translate(-3px, 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
 }

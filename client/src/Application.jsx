@@ -24,7 +24,7 @@ class Application extends React.PureComponent {
         }).then(response => {
             const randomWord = response.data.word
             
-            this.props.addNewSolution(randomWord)
+            // this.props.addNewSolution(randomWord)
         })
     }
 

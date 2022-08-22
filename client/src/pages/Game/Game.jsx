@@ -74,6 +74,9 @@ class Game extends React.PureComponent {
                         error.play()
                     }
                 })
+            } else {
+                error.play()
+                this.props.toggleIncompleteWordInputAlert(true)
             }
             // if (this.props.currentGuess === this.props.solution.word) {    
             //     if (this.props.currentGuess.length === 5) {
@@ -152,7 +155,7 @@ class Game extends React.PureComponent {
 
         else {
             // TODO
-            const word = new Word(this.props.currentGuess, this.props.solution);
+            const word = new Word(this.props.currentGuess.toUpperCase(), this.props.solution);
             word.create();
             this.props.makeWordGuess(word);
             this.props.resetCurrentGuess();
@@ -181,7 +184,7 @@ function mapStateToProps(state) {
         solution,
         guessHistory,
         currentGuess,
-        guessObjectsHistory
+        guessObjectsHistory,
     }
 }
 
@@ -191,7 +194,8 @@ function mapDispatchToProps(dispatch) {
         undoLetterGuess: () => dispatch({ type: "undo/letter" }),
         makeWordGuess: (word) => dispatch({ type: "guessed/word", payload: word }),
         resetCurrentGuess: () => dispatch({ type: "RESET/GUESS_WORD" }),
-        makeWrongWordGuess: (word) => dispatch({type: "guessed/incorrect@word", payload: word})
+        makeWrongWordGuess: (word) => dispatch({type: "guessed/incorrect@word", payload: word}),
+        toggleIncompleteWordInputAlert: (status) => dispatch({ type: "ALERT/INCOMPLETE_INPUT", payload: status })
     }
 }
 

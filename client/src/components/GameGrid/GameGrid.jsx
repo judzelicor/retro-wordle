@@ -6,30 +6,73 @@ import { v4 as uuidv4 } from "uuid";
 class GameGrid extends React.PureComponent {
     constructor(props) {
         super(props);
+        this.state = {
+            rowShouldShake: false,
+            shouldShouldAnimate: false
+        }
+    }
+
+    componentDidUpdate() {
+        if (this.props.incompleteWordInputAlertIsVisible) {
+            this.setState({rowShouldShake: true})
+
+            setTimeout(() => {
+                this.props.toggleIncompleteWordInputAlert(false)
+                this.setState({rowShouldShake: false})
+            }, 300)
+        }
     }
 
     render() {
-        console.log(this.props)
         return (
             <React.Fragment key={uuidv4()}>
-                {
+                {/* {
                     [...this.props.guessObjectsHistory, ...Array(7 - this.props.guessObjectsHistory.length)].map((word, index) => {
                         if (word) {
                             const shouldAnimate = (word.word === this.props.guessHistory[this.props.guessHistory.length - 1]) ? true : false;
-                            
                             return (
                                 <div className={`worditudeWordDisplayRow__94rB ${shouldAnimate ? "animate" : "history"}`} key={uuidv4()}>
                                     <GridRow key={uuidv4()} word={ word.displayArray } />
                                 </div>
                             )
-                        } else {
+                        } else if (this.props.guessHistory.length === index) {
+                            const rowShouldShake = this.state.rowShouldShake && (this.props.guessHistory.length === index ? "shake" : "");
 
                             return (
-                                <div className={`worditudeWordDisplayRow__94rB`} key={uuidv4()}>
+                                <div key={ uuidv4() } className={`worditudeWordDisplayRow__94rB ${rowShouldShake}`}>
+                                    <GridRow round={index} key={uuidv4()} />
+                                </div>
+                            )
+                        } else {
+                            return (
+                                <div key={ uuidv4() } className={`worditudeWordDisplayRow__94rB`}>
                                     <GridRow round={index} key={uuidv4()} />
                                 </div>
                             )
                         }
+                    })
+                } */}
+                {
+                    // [...this.props.guessObjectsHistory].map((word, index) => {
+                    //     const shouldAnimate = (word.word === this.props.guessHistory[this.props.guessHistory.length - 1]) ? true : false;
+                    //     return (
+                    //         <div className={`worditudeWordDisplayRow__94rB ${shouldAnimate ? "animate" : "history"}`} key={uuidv4()}>
+                    //         </div>
+                    //     )
+                    // })
+                    // <GridRow key={uuidv4()} word={ word.displayArray } />
+                }
+                {
+                    this.currentGuess.length < 5 && <GridRow currentGuess={this.props.currentGuess} />
+                }
+                {
+                    [...Array(7 - this.props.guessObjectsHistory.length)].map((word, index) => {
+                        const shouldAnimate = (word.word === this.props.guessHistory[this.props.guessHistory.length - 1]) ? true : false;
+                        return (
+                            <div className={`worditudeWordDisplayRow__94rB ${shouldAnimate ? "animate" : "history"}`} key={uuidv4()}>
+                                <GridRow key={uuidv4()} word={ word.displayArray } />
+                            </div>
+                        )
                     })
                 }
             </React.Fragment>
@@ -39,11 +82,21 @@ class GameGrid extends React.PureComponent {
 
 function mapStateToProps(state) {
     const { guessObjectsHistory, currentGuess, wrongGuesses, guessHistory } = state.guessReducer;
+    const { incompleteWordInputAlertIsVisible } = state.alertReducer;
     return {
         guessHistory,
         guessObjectsHistory,
-        wrongGuesses
+        wrongGuesses,
+        currentGuess,
+        currentGuess,
+        incompleteWordInputAlertIsVisible
     }
 }
 
-export default connect(mapStateToProps)(GameGrid);
+function mapDispatchToProps(dispatch) {
+    return {
+        toggleIncompleteWordInputAlert: (status) => dispatch({ type: "ALERT/INCOMPLETE_INPUT", payload: status })
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GameGrid);

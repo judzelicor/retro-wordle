@@ -5,13 +5,15 @@ import {
 import { 
     solutionReducer,
     playerReducer,
-    guessReducer
+    guessReducer,
+    alertReducer
  } from "../reducers";
 
 const store = createStore(combineReducers({
     solutionReducer,
     playerReducer,
-    guessReducer
+    guessReducer,
+    alertReducer
 }));
 
 export default store;
