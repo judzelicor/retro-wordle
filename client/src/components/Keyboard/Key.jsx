@@ -35,7 +35,7 @@ class Key extends React.PureComponent {
             case "Enter":
                 axios({
                     method: "GET",
-                    url: `http://babylon:3001/api/word/${ currentGuess }`
+                    url: `/api/word/${ currentGuess }`
                 }).then(response => {
                     if (response.data.success && !guessHistory.includes(response.data.word.word.toUpperCase())) {
                         if (guessHistory.length >= 7) return;
