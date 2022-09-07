@@ -26,7 +26,6 @@ class GameGrid extends React.PureComponent {
     }
 
     render() {
-        console.log(this.props.guessObjectsHistory)
         return (
             <React.Fragment key={uuidv4()}>
                 {

@@ -17,7 +17,6 @@ class Key extends React.PureComponent {
     handleClick(event) {
         event.preventDefault();
         const typingSFX = new Audio("/assets/sfx/type.mp3")
-        console.log(this.state.keyIsResponsive)
         const { value, makeLetterGuess, currentGuess } = this.props;
         if (currentGuess.length < 5 && this.state.keyIsResponsive) {
             typingSFX.play()

@@ -40,7 +40,6 @@ class Word {
                 this.displayArray[this.guess.indexOf(letter)] = character
                 this.solutionArray[this.solutionArray.indexOf(letter)] = null
             } else {
-                console.log("incorrect letter", letter)
                 const state = "incorrect"
                 const character = new Letter(letter, state)
                 this.displayArray[this.guess.indexOf(letter)] = character

@@ -113,7 +113,6 @@ class Game extends React.PureComponent {
 
         if (playerGues.length < 5) {
             // TODO
-            console.log("Guess must be 5 letters long.")
         }
 
         else if (this.props.guessHistory.includes(playerGues)) {
@@ -131,7 +130,6 @@ class Game extends React.PureComponent {
     }
 
     render() {
-        console.log(this.props)
         return (
             <main className="appViewport">
                 <div className="grid">
