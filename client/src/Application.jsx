@@ -20,7 +20,7 @@ class Application extends React.PureComponent {
     componentDidMount() {
         axios({
             method: "GET",
-            url: "/api/word/random",
+            url: "http://babylon:3001/api/word/random",
         }).then(response => {
             const randomWord = response.data.word
             

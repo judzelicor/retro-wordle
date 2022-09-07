@@ -65,7 +65,7 @@ class Game extends React.PureComponent {
             if (this.props.currentGuess.length === 5) {
                 axios({
                     method: "GET",
-                    url: `/api/word/${ this.props.currentGuess }`
+                    url: `http://babylon:3001/api/word/${ this.props.currentGuess }`
                 }).then(response => {
                     window.removeEventListener("keydown", this.handlePlayerInput)
 
